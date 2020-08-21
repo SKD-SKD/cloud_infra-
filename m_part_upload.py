@@ -1,3 +1,7 @@
+#this file is work in progress 
+#here for the reference only 
+
+
 import VzCloudCompute
 import string, random, datetime, time, hmac, hashlib, base64, requests, json, getpass, sys
 from termcolor import colored, cprint
