@@ -1,14 +1,11 @@
 #this file is work inprogress 
-#here of reference only 
-
+#here for reference only 
 
 
 import VzCloudCompute
 import string, random, datetime, time, hmac, hashlib, base64, requests, json, getpass, sys
 from termcolor import colored, cprint
 
-##################
-# Build the vdisk mounts
 def buildVdiskMounts(disks):
 	vdiskItems = []
 	for i, item in enumerate(disks):
@@ -34,8 +31,6 @@ def buildVdiskMounts(disks):
 	print "buildVdiskMounts called"
 	#return the list as the 'items' attribute
 	return { 'items': vdiskItems }
-
-
 
 def buildVnics(vnics):
 	vnicItems = []
@@ -67,10 +62,6 @@ def buildVnics(vnics):
 		print "buildVnics called"
 		print json.dumps(vnic, indent=1 , sort_keys=True )
 	return { 'items': vnicItems }
-
-
-
-
 
 def GetFreePublicIP():
 	freeIP = r.request('POST','/api/compute/ip-address')
@@ -187,11 +178,6 @@ def MkPublicNic (bandwith, number , yourIP ) :
 
 
 #############################
-
-
-
-
-#Enter your keys without having them echoed back on screen (for security)
 chassis_url = "https://amsa4.cloud.verizon.com"
 accessKey = "XXXXXX"
 secretKey = "XXXXXXXXXXX"
@@ -206,21 +192,12 @@ Memory = 7168
 Tag = "MyTag"
 DiskAddName = "ExtraDiscTTT"
 DiskAddSize = 2 *1024 #GBytes
-
+#############################
 
 #Create an instance of the VzREST class in variable 'r'
 r = VzCloudCompute.VzREST(secretKey=secretKey, accessKey=accessKey,url=chassis_url)
 print r._secretKey
 print r._accessKey
-
-
-#--------------------------------------------------------------------------
-#exaple : 
-#API = r.request('GET','/api/compute')
-#templates = API.get('vmTemplates')
-#vm = templates.get('href')
-#all_templates = r.request('GET',vm)
-#-----------------------------------
 
 data = {}
 
@@ -230,8 +207,6 @@ Vdiskhref = FindOSTemplate(Template)
 VmTemplatehref = FindHwVmTemplate(VmConfig)
 #print json.dumps(VmTemplatehdesc, indent=1 , sort_keys=True )
 
-#--------------------------------------------------------------------------
-
 ExtrDiskSpecJOB = MkDisk(DiskAddName, DiskAddSize)
 #print json.dumps(ExtrDiskSpecJOB, indent=1 , sort_keys=True )
 ExtrDiskSpecHref = ExtrDiskSpecJOB['target']['href']
@@ -239,8 +214,6 @@ ExtrDiskSpecHref = ExtrDiskSpecJOB['target']['href']
 ExtrDisks = []
 ExtrDisks.append(ExtrDiskSpecHref)
 #print json.dumps(ExtrDisks, indent=1 , sort_keys=True )
-
-#--------------------------------------------------------------------------
 
 vdiskMnt = MkDiskRootMnt (IOps, 0)
 vdiskMnt1 = MkDiskMnt (IOps, 1)
@@ -255,9 +228,6 @@ vdiskItems.append(vdiskMnt1)
 data['vdiskMounts'] = {'items': vdiskItems }
 print json.dumps(data['vdiskMounts'], indent=1 , sort_keys=True )
 
-
-
-#--------------------------------------------------------------------------
 print "Public Net get IP"
 
 yourIP = GetFreePublicIP()
@@ -272,8 +242,6 @@ vnicItems.append(vnic)
 
 data['vnics'] = {'items': vnicItems }
 
-#--------------------------------------------------------------------------
-
 #set it up manually
 VmTemplatehref = ""
 data['processorCores'] = Cores
@@ -285,25 +253,12 @@ data['processorSpeed'] = Clock
 #--------------------------------------------------------------------------
 data['name'] = VMname
 
-#--------------------------------------------------------------------------
-
 #create VM
 VmCreate = r.request('POST', '/api/compute/vm', data=data ) #, printJSON=True)
-#print "VmCreate"
+print "VmCreate"
 print json.dumps(VmCreate, indent=1 , sort_keys=True )
 VmHref = VmCreate['target']['href']
-#print VmHref
-
-#--------------------------------------------------------------------------
-#
-#
-#--------------------------------------------------------------------------
-## ready to delete ?
-##userC = raw_input('enter the key to delete  Vm')
-##DelVmJob = DelVm(VmHref)
-##WaitOnRefCmpl(DelVmJob)
-#VmOff(VmHref)
-#userC = raw_input('enter the key to delete  ')
+print VmHref
 
 WaitOnRefCmpl(DelRsrc(VmHref))
 
@@ -317,7 +272,6 @@ while (1) :
 	WaitOnRefCmpl(test)
 	break
 
-
 while (1) :
 	test = DelRsrc(yourIP['href'])
 	if test['description'] == "Error" :   #check for error
@@ -325,7 +279,6 @@ while (1) :
 		continue
 	WaitOnRefCmpl(test)
 	break
-
 
 #WaitOnRefCmpl(DelSecDisk (extra_diskHref))
 
