@@ -1,5 +1,5 @@
-#this file is work inprogress 
-#here for reference only 
+#this file is work in progress 
+#here for the reference only 
 
 
 import VzCloudCompute
