@@ -1,3 +1,8 @@
+#this file is work inprogress 
+#here of reference only 
+
+
+
 import VzCloudCompute
 import string, random, datetime, time, hmac, hashlib, base64, requests, json, getpass, sys
 from termcolor import colored, cprint
@@ -181,15 +186,15 @@ def MkPublicNic (bandwith, number , yourIP ) :
 	return vnic
 
 
-################################################################################
+#############################
 
 
 
 
 #Enter your keys without having them echoed back on screen (for security)
 chassis_url = "https://amsa4.cloud.verizon.com"
-accessKey = "gzkvi7gjhdrnqm45x7yydaf11ce4e091"
-secretKey = "duu7s3g24d4dlsxh334n2dxr52qx55njgungsbzs4bge5dgg6hrzbkorrkxdm4j4"
+accessKey = "XXXXXX"
+secretKey = "XXXXXXXXXXX"
 Template = "Turnkey Linux Core 13.0version 5 moded tempate  ...."
 VmConfig = "8 VPU's 28 GB"
 VMname = "MyVm_Using_REST_API"
@@ -210,7 +215,7 @@ print r._accessKey
 
 
 #--------------------------------------------------------------------------
-#exaple : ----------------------------
+#exaple : 
 #API = r.request('GET','/api/compute')
 #templates = API.get('vmTemplates')
 #vm = templates.get('href')
@@ -219,13 +224,11 @@ print r._accessKey
 
 data = {}
 
-
 Vdiskhref = FindOSTemplate(Template)
 #print json.dumps(Vdiskhdesc, indent=1 , sort_keys=True )
 
 VmTemplatehref = FindHwVmTemplate(VmConfig)
 #print json.dumps(VmTemplatehdesc, indent=1 , sort_keys=True )
-
 
 #--------------------------------------------------------------------------
 
@@ -271,7 +274,6 @@ data['vnics'] = {'items': vnicItems }
 
 #--------------------------------------------------------------------------
 
-
 #set it up manually
 VmTemplatehref = ""
 data['processorCores'] = Cores
@@ -297,22 +299,20 @@ VmHref = VmCreate['target']['href']
 #
 #--------------------------------------------------------------------------
 ## ready to delete ?
-userC = raw_input('enter the key to delete  Vm')
-
+##userC = raw_input('enter the key to delete  Vm')
 ##DelVmJob = DelVm(VmHref)
 ##WaitOnRefCmpl(DelVmJob)
-
 #VmOff(VmHref)
-
 #userC = raw_input('enter the key to delete  ')
+
 WaitOnRefCmpl(DelRsrc(VmHref))
-#userC = raw_input('enter the key to delete  disk')
+
+userC = raw_input('enter the key to delete  disk')
 
 while (1) :
 	test = DelRsrc(ExtrDiskSpecHref)
 	if test['description'] == "Error" :   #check for error
 		print "Disk ERROR - repeat "
-		##test = DelSecDisk(extra_diskHref)
 		continue
 	WaitOnRefCmpl(test)
 	break
@@ -322,7 +322,6 @@ while (1) :
 	test = DelRsrc(yourIP['href'])
 	if test['description'] == "Error" :   #check for error
 		print "IP ERROR - repeat "
-		##test = DelSecDisk(extra_diskHref)
 		continue
 	WaitOnRefCmpl(test)
 	break
@@ -330,8 +329,7 @@ while (1) :
 
 #WaitOnRefCmpl(DelSecDisk (extra_diskHref))
 
-
-print "end of the script reached - hope for success !!!"
+print "end of the script reached -  success !!!"
 
 
 
